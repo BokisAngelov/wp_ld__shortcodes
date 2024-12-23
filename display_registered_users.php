@@ -1,3 +1,4 @@
+<?php
 function display_registered_users() {
 
         if (!is_user_logged_in()){
@@ -49,3 +50,5 @@ function display_registered_users() {
    
         return $output;
     }
+
+?>
