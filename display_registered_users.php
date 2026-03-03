@@ -50,5 +50,5 @@ function display_registered_users() {
    
         return $output;
     }
-
+add_shortcode('display_registered_users', 'display_registered_users')
 ?>
