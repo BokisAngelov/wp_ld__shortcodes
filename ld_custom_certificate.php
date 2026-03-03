@@ -126,7 +126,7 @@ add_shortcode( 'cardet_lesson_certificate', 'cardet_lesson_certificate' );
 function cardet_lesson_certificate( $atts ) {
     $atts = shortcode_atts(
         [
-            'cert_id' => '1276',
+            'cert_id' => '',
             'label'   => 'Download your certificate',
         ],
         $atts,
