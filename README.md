@@ -1,5 +1,54 @@
 # Useful WordPress and LearnDash shortcodes
 
+## Password Reset Shortcode
+This shortcode creates a password reset form for your website.
+
+### How it works:
+- User enters username or email - They type their login credentials into the form
+- System finds the user - The code searches for a user matching that username or email
+- Generates reset link - If found, it creates a special password reset link
+- Sends email - The link is emailed to the user
+- Shows message - Displays a success or error message
+- To use it:
+-- Add [password_reset_form] to any WordPress page or post to display the form.
+
+## Display registered users (LearnDash)
+### How it works
+- Checks if user is logged in - If not, it stops and shows nothing
+- Gathers user data - Pulls all registered users and collects their first name, last name, email, country, and role (adjust the fields if needed)
+- Sorts by country - Organizes the list alphabetically by country
+- Displays as a table - Creates an HTML table showing all users with their information in rows
+-- To use it:
+-- Add [display_registered_users] to any WordPress page or post to display the table.
+
+## Force user import
+### How it works
+- Reads a CSV file containing user data (username, email, password, name, organization)
+- Checks if users already exist by username or email
+- Creates new users if they don't exist, or updates existing ones
+- Assigns metadata like:
+-- Organization field
+- Hides the admin toolbar for these users
+- Adds users to a LearnDash group (adjust accordingly)
+- Shows colored status messages for each row (green for success, red for errors, blue for info)
+
+### Key requirements:
+- Admin access only
+- CSV file must be in the correct column order
+- Requires LearnDash plugin for group assignment
+- **Should be deleted immediately after use (for security)**
+
+
+## Force login/logout redirect
+### How it works
+This file does two things:
+- Lock Down Your Website
+  - If someone is not logged in, kick them to the login page
+  - Except: Let them see the homepage, registration page, and password reset page (adjust accordingly)
+  - Exception to exception: Don't block AJAX requests or API calls
+- Send Users Home After Logout
+  - When someone logs out, send them back to the homepage
+
 
 ## LearnDash custom certificate
 ### How it works
