@@ -12,6 +12,8 @@ This shortcode creates a password reset form for your website.
 - To use it:
 -- Add [password_reset_form] to any WordPress page or post to display the form.
 
+---------------------------------------------------------------------------------------
+
 ## Display registered users (LearnDash)
 ### How it works
 - Checks if user is logged in - If not, it stops and shows nothing
@@ -20,6 +22,8 @@ This shortcode creates a password reset form for your website.
 - Displays as a table - Creates an HTML table showing all users with their information in rows
 -- To use it:
 -- Add [display_registered_users] to any WordPress page or post to display the table.
+
+---------------------------------------------------------------------------------------
 
 ## Force user import
 ### How it works
@@ -38,6 +42,7 @@ This shortcode creates a password reset form for your website.
 - Requires LearnDash plugin for group assignment
 - **Should be deleted immediately after use (for security)**
 
+---------------------------------------------------------------------------------------
 
 ## Force login/logout redirect
 ### How it works
@@ -49,6 +54,7 @@ This file does two things:
 - Send Users Home After Logout
   - When someone logs out, send them back to the homepage
 
+---------------------------------------------------------------------------------------
 
 ## LearnDash custom certificate
 ### How it works
@@ -72,3 +78,21 @@ This file does two things:
 ### Shortcode usage
 - [cardet_lesson_certificate cert_id="1265"]
 - [cardet_lesson_certificate cert_id="1265" label="Get your badge"]
+
+---------------------------------------------------------------------------------------
+
+## Cloudflare Turnstile Registration Validation
+### How it works
+- Intercepts user registration - Hooks into the WordPress registration form submission
+- Removes default Turnstile validation - Disables the built-in Cloudflare Turnstile plugin's validation to use custom logic
+- Retrieves the Turnstile token - Extracts the verification token from the form submission (cf-turnstile-response)
+- Validates with Cloudflare - Sends the token to Cloudflare's verification endpoint along with your secret key
+- Verifies human status - Checks the response to confirm the user passed the CAPTCHA challenge
+- Shows error messages - Displays appropriate error messages if verification fails or is missing
+ 
+### Key requirements:
+Your Cloudflare Turnstile keys must be defined in wp-config.php:
+- define('CF_TURNSTILE_SITE_KEY', 'xxxxxxxxxx');
+- define('CF_TURNSTILE_SECRET_KEY', 'xxxxxxxxxx');
+
+
