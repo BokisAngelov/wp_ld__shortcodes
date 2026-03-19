@@ -83,7 +83,7 @@ This file does two things:
 
 ## Cloudflare Turnstile Registration Validation
 ### How it works
-- Intercepts user registration - Hooks into the WordPress registration form submission
+- Intercepts user registration - Hooks into the LearnDash registration form submission
 - Removes default Turnstile validation - Disables the built-in Cloudflare Turnstile plugin's validation to use custom logic
 - Retrieves the Turnstile token - Extracts the verification token from the form submission (cf-turnstile-response)
 - Validates with Cloudflare - Sends the token to Cloudflare's verification endpoint along with your secret key
