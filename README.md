@@ -95,4 +95,13 @@ Your Cloudflare Turnstile keys must be defined in wp-config.php:
 - define('CF_TURNSTILE_SITE_KEY', 'xxxxxxxxxx');
 - define('CF_TURNSTILE_SECRET_KEY', 'xxxxxxxxxx');
 
+---------------------------------------------------------------------------------------
 
+## Security
+
+See [SECURITY.md](SECURITY.md) to report a vulnerability and [docs/security.md](docs/security.md) for the review notes, what each file protects against and how the automated scans work.
+
+Behaviour changes worth knowing:
+- `[display_registered_users]` now requires the `list_users` capability (administrators). Change it with the `display_registered_users_capability` filter.
+- `[password_reset_form]` always shows the same message, so it no longer reveals whether an account exists, and it is rate limited.
+- `force-import.php` now shows a confirmation button; nothing is imported until an admin clicks it.

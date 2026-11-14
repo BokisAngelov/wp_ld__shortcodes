@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * LESSON CERTIFICATE SYSTEM
  *
@@ -57,6 +61,7 @@ function cardet_cert_tag_completed_date() {
  */
 add_action( 'template_redirect', 'cardet_lesson_cert_endpoint', 1 );
 function cardet_lesson_cert_endpoint() {
+    // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Nonce is verified below.
     if ( empty( $_GET['cardet_cert'] ) ||
          empty( $_GET['cert_id'] )     ||
          empty( $_GET['lesson_id'] )   ||
@@ -66,6 +71,7 @@ function cardet_lesson_cert_endpoint() {
 
     $cert_id   = absint( $_GET['cert_id'] );
     $lesson_id = absint( $_GET['lesson_id'] );
+    // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
     if ( ! wp_verify_nonce(
         sanitize_text_field( wp_unslash( $_GET['cert_nonce'] ) ),
@@ -78,8 +84,17 @@ function cardet_lesson_cert_endpoint() {
         wp_die( esc_html__( 'You must be logged in to view this certificate.' ) );
     }
 
+    // The IDs come from the URL: make sure they point at the right kind of post.
+    if ( 'sfwd-certificates' !== get_post_type( $cert_id ) || ! in_array( get_post_type( $lesson_id ), array( 'sfwd-lessons', 'sfwd-topic' ), true ) ) {
+        wp_die( esc_html__( 'Invalid certificate request.' ), '', array( 'response' => 400 ) );
+    }
+
     $user_id   = get_current_user_id();
     $course_id = learndash_get_course_id( $lesson_id );
+
+    if ( function_exists( 'sfwd_lms_has_access' ) && ! sfwd_lms_has_access( $course_id, $user_id ) ) {
+        wp_die( esc_html__( 'You do not have access to this course.' ), '', array( 'response' => 403 ) );
+    }
 
     if ( ! learndash_is_lesson_complete( $user_id, $lesson_id, $course_id ) ) {
         wp_die( esc_html__( 'You need to complete the lesson first.' ) );
@@ -155,12 +170,12 @@ function cardet_lesson_certificate( $atts ) {
             ],
             get_permalink( $cert_id )
         );
+        // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- $label is escaped above.
         echo '<a class="uk-button uk-button-primary" href="' . esc_url( $cert_url ) . '" target="_blank" rel="noopener noreferrer">' . $label . '</a>';
     } else {
         echo '<a class="uk-button uk-button-secondary" disabled uk-tooltip="You need to complete all the Units to download your certificate"><span uk-icon="lock" class="uk-text-default uk-icon"></span> ' . $label . '</a>';
     }
 
+    // phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
     return ob_get_clean();
 }
-
-?>

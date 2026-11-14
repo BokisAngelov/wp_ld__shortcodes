@@ -1,4 +1,8 @@
-<?php 
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * LearnDash registration: Cloudflare Turnstile validation.
  *
@@ -17,6 +21,7 @@ add_filter('registration_errors', function ($errors, $sanitized_user_login, $use
     }
     $checked = true;
 
+    // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Cloudflare's single-use token is the credential.
     $token = isset($_POST['cf-turnstile-response']) ? sanitize_text_field(wp_unslash($_POST['cf-turnstile-response'])) : '';
 
     if ( empty($token) ) {
@@ -26,6 +31,11 @@ add_filter('registration_errors', function ($errors, $sanitized_user_login, $use
 
     $secret = defined('CF_TURNSTILE_SECRET_KEY') ? CF_TURNSTILE_SECRET_KEY : get_option('cf_turnstile_secret_key');
 
+    // Fail closed when no secret is configured.
+    if ( empty( $secret ) ) {
+        $errors->add('turnstile_config', __('ERROR: Human verification is not configured.'));
+        return $errors;
+    }
 
     $resp = wp_remote_post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
         'timeout' => 10,
@@ -52,4 +62,3 @@ add_filter('registration_errors', function ($errors, $sanitized_user_login, $use
     return $errors;
 }, 10, 3);
 
-?>
